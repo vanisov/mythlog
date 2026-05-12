@@ -1,4 +1,9 @@
-import type { CommandArg, CommandContext, CommandResult } from './command.types';
+import type {
+  CommandArg,
+  CommandContext,
+  CommandResult,
+  CommandRuntimeContext,
+} from "./command.types";
 
 export abstract class BaseCommand {
   abstract readonly name: string;
@@ -8,5 +13,5 @@ export abstract class BaseCommand {
   readonly aliases?: string[];
   readonly args?: CommandArg[];
 
-  abstract execute(ctx: CommandContext): CommandResult;
+  abstract execute(ctx: CommandContext, runtime: CommandRuntimeContext): CommandResult;
 }

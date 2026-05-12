@@ -1,6 +1,7 @@
 import { CommandParser } from "./command.parser";
 import { CommandRegistry } from "./command.registry";
-import { HelpCommand, LookCommand } from "./commands";
+import type { CommandRuntimeContext } from "./command.types";
+import { HelpCommand, LookCommand, RollCommand } from "./commands";
 
 export class CommandRouter {
   private readonly parser: CommandParser;
@@ -13,7 +14,7 @@ export class CommandRouter {
     this.registerCommands();
   }
 
-  route(input: string) {
+  route(input: string, ctx: CommandRuntimeContext) {
     const context = this.parser.parse(input);
 
     if (!context) {
@@ -28,11 +29,12 @@ export class CommandRouter {
       };
     }
 
-    return command.execute(context);
+    return command.execute(context, ctx);
   }
 
   private registerCommands(): void {
     this.registry.register(new LookCommand());
     this.registry.register(new HelpCommand(this.registry));
+    this.registry.register(new RollCommand());
   }
 }

@@ -1,8 +1,18 @@
+import type { Dice } from "../core";
+import type { TickService } from "../game";
+import type { StateStore } from "../state";
+
 export type CommandContext = {
   command: string;
   raw: string;
   args: string[];
 };
+
+export interface CommandRuntimeContext {
+  dice: Dice;
+  store: StateStore;
+  tick: TickService;
+}
 
 export type CommandResult = {
   success: boolean;
