@@ -1,13 +1,19 @@
-import readline from "readline";
+import readline from 'readline';
+import { CommandRouter } from './command';
+
+const router = new CommandRouter();
 
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
 });
 
-console.log("Mythlog initialized...");
+console.log('Game started. Type !help');
 
-rl.question("What is your name?", (answer: string) => {
-  console.log(`Hello ${answer}`);
-  rl.close;
+rl.on('line', (input: string) => {
+  const result = router.route(input);
+
+  if (result) {
+    console.log(result.output);
+  }
 });
