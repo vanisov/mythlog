@@ -1,12 +1,15 @@
-import { BaseCommand } from '../command';
-import type { CommandResult } from '../command.types';
+import { BaseCommand } from "../command";
+import type { CommandResult } from "../command.types";
 
 export class LookCommand extends BaseCommand {
-  readonly name = 'look';
+  readonly name = "look";
+  readonly description = "observe";
+  readonly usage = "look <direction>";
 
   execute(): CommandResult {
     return {
-      output: 'You see darkness surrounding you...',
+      success: true,
+      output: "You see darkness surrounding you...",
     };
   }
 }

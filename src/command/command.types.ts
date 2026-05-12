@@ -5,7 +5,9 @@ export type CommandContext = {
 };
 
 export type CommandResult = {
-  output: string;
+  success: boolean;
+  output?: string;
+  error?: string;
 };
 
 export type ParsedCommand = {
@@ -14,3 +16,9 @@ export type ParsedCommand = {
 };
 
 export type CommandHandler = (args: string[], ctx: CommandContext) => CommandResult;
+
+export type CommandArg = {
+  name: string;
+  required?: boolean;
+  description?: string;
+};

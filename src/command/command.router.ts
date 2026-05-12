@@ -1,6 +1,6 @@
-import { CommandParser } from './command.parser';
-import { CommandRegistry } from './command.registry';
-import { LookCommand } from './commands/look.command';
+import { CommandParser } from "./command.parser";
+import { CommandRegistry } from "./command.registry";
+import { HelpCommand, LookCommand } from "./commands";
 
 export class CommandRouter {
   private readonly parser: CommandParser;
@@ -24,7 +24,7 @@ export class CommandRouter {
 
     if (!command) {
       return {
-        output: 'Unknown command.',
+        output: `Unknown command: ${context.command}`,
       };
     }
 
@@ -33,5 +33,6 @@ export class CommandRouter {
 
   private registerCommands(): void {
     this.registry.register(new LookCommand());
+    this.registry.register(new HelpCommand(this.registry));
   }
 }
