@@ -4,5 +4,5 @@ namespace Mythlog.Parser;
 
 public interface ICommandParser
 {
-    ParsedCommand? Parse(string input);
+    CommandContext? Parse(string input);
 }

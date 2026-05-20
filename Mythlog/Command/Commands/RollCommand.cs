@@ -1,6 +1,6 @@
 namespace Mythlog.Command.Commands;
 
-using Mythlog.Core.Dice;
+using Mythlog.Dice;
 
 public class RollCommand : BaseCommand
 {

@@ -1,6 +1,6 @@
 using Mythlog.Command;
 using Mythlog.Command.Commands;
-using Mythlog.Core.Dice;
+using Mythlog.Dice;
 using Mythlog.Parser;
 using Mythlog.State;
 using Mythlog.Tick;
@@ -22,7 +22,7 @@ var registry = new CommandRegistry();
 var parser = new CommandParser();
 
 tick.OnTick(_ =>
-    store.Set(state =>
+    store.Update(state =>
         state with { Tick = state.Tick + 1 }
     )
 );
@@ -41,7 +41,7 @@ if (args.Length > 0)
 }
 
 Console.WriteLine("Mythlog");
-Console.WriteLine("Type \"help\" for commands or \"exit\" to quit.");
+Console.WriteLine("Type \"!help\" for commands or \"exit\" to quit.");
 
 while (true)
 {
@@ -84,12 +84,12 @@ static async Task<int> ExecuteCommand(
         return 1;
     }
 
-    var command = registry.Get(parsed.Name);
+    var command = registry.Get(parsed.Command);
 
     if (command is null)
     {
         Console.Error.WriteLine(
-            $"Unknown command: {parsed.Name}"
+            $"Unknown command: {parsed.Command}"
         );
 
         Console.Error.WriteLine(
@@ -100,7 +100,7 @@ static async Task<int> ExecuteCommand(
     }
 
     var context = new CommandContext(
-        parsed.Name,
+        parsed.Command,
         parsed.Raw,
         parsed.Args.ToArray()
     );
@@ -110,15 +110,14 @@ static async Task<int> ExecuteCommand(
         runtime
     );
 
-    if (!string.IsNullOrWhiteSpace(result.Output))
-    {
-        var output =
-            result.Success
-                ? Console.Out
-                : Console.Error;
+    if (string.IsNullOrWhiteSpace(result.Output)) return result.Success ? 0 : 1;
+    
+    var output =
+        result.Success
+            ? Console.Out
+            : Console.Error;
 
-        output.WriteLine(result.Output);
-    }
+    output.WriteLine(result.Output);
 
     return result.Success ? 0 : 1;
 }
@@ -135,11 +134,11 @@ static bool IsExitCommand(string input)
            );
 }
 
+
 internal sealed class AppRuntimeContext(
     Dice dice,
     StateStore store,
-    TickService tick
-) : ICommandRuntimeContext
+    TickService tick) : ICommandRuntimeContext
 {
     public Dice Dice { get; } = dice;
 

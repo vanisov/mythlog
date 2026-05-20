@@ -1,4 +1,4 @@
-namespace Mythlog.Core.Dice;
+namespace Mythlog.Dice;
 
 public record RollResult(
     int Value,

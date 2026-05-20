@@ -1,6 +1,6 @@
 using System.Security.Cryptography;
 
-namespace Mythlog.Core.Dice;
+namespace Mythlog.Dice;
 
 public class Dice
 {

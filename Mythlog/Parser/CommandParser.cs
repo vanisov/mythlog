@@ -6,7 +6,7 @@ public class CommandParser : ICommandParser
 {
     private const string Prefix = "!";
 
-    public ParsedCommand? Parse(string input)
+    public CommandContext? Parse(string input)
     {
         if (string.IsNullOrWhiteSpace(input))
         {
@@ -15,41 +15,41 @@ public class CommandParser : ICommandParser
 
         var trimmed = input.Trim();
 
-        if (!trimmed.StartsWith(Prefix))
+        if (!IsCommand(trimmed))
         {
             return null;
         }
 
-        var withoutPrefix = trimmed[1..];
+        var withoutPrefix = RemovePrefix(trimmed);
 
-        if (string.IsNullOrWhiteSpace(withoutPrefix))
+        if (IsEmpty(withoutPrefix))
         {
             return null;
         }
 
-        var split = withoutPrefix.Split(
-            "",
-            StringSplitOptions.RemoveEmptyEntries
-        );
+        var parts = SplitInput(withoutPrefix);
 
-        var commandName = split[0].ToLowerInvariant();
-
-        var args = split.Skip(1).ToList();
-
-        return new ParsedCommand(
-            commandName,
-            args,
-            trimmed
-        );
+        return new CommandContext(Raw: input, Command: parts.Command, Args: parts.Args);
     }
 
-    private bool IsCommand(string input)
+    private static bool IsCommand(string input)
     {
         return input.StartsWith(Prefix);
     }
 
-    private string RemovePrefix(string input)
+    private static string RemovePrefix(string input)
     {
         return input[Prefix.Length..].Trim();
+    }
+
+    private static bool IsEmpty(string input)
+    {
+        return input.Length == 0;
+    }
+
+    private static ParsedCommand SplitInput(string input)
+    {
+        var parts = input.Split((char[])null!, StringSplitOptions.RemoveEmptyEntries);
+        return new ParsedCommand(Command: parts[0], Args: parts[1..].ToArray());
     }
 }
